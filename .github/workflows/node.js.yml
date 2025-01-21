@@ -5,7 +5,7 @@ name: Build and Clean Up
 on:
   push:
     branches:
-      - main  # Trigger workflow on pushes to the main branch
+      - master  # Trigger workflow on pushes to the main branch
 
 jobs:
   build:
