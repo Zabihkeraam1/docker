@@ -1,18 +1,41 @@
 # This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
-
-name: CI Workflow
+name: Build and Clean Up
 
 on:
   push:
     branches:
-      - master
+      - main  # Trigger workflow on pushes to the main branch
 
 jobs:
   build:
-    runs-on: self-hosted  # Use self-hosted runner
+    runs-on: self-hosted  # Or 'ubuntu-latest', depending on your runner setup
+
     steps:
-      - uses: actions/checkout@v3
-      - name: Run a script
-        run: echo "Hello from the self-hosted runner!"
+    # Step 1: Checkout the repository
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Step 2: Remove unnecessary files from the workspace
+    - name: Clean up workspace
+      run: |
+        echo "Cleaning up unnecessary files..."
+        rm -rf build/  # Remove the build directory if it exists
+        rm -rf *.tmp   # Remove temporary files
+        echo "Cleanup complete."
+
+    # Step 3: Run the build process
+    - name: Build the application
+      run: |
+        echo "Starting the build process..."
+        mkdir build
+        echo "Build complete." > build/output.txt
+
+    # Step 4: (Optional) Upload the new build as an artifact
+    - name: Upload Build Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-output
+        path: build/
+
 
